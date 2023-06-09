@@ -19,11 +19,11 @@ def read_file(str1, file, color, color_letter):
         for line_number, line in enumerate(file, start=1):
             if line_number in range(start_line, start_line + 9):
                 counter += 1
-                lines = list(line)[:-1]
                 if str1[ch] in color_letter:
-                    for i in range(len(lines)):
-                        lines[i] = color + lines[i] + '\033[0m'
-                d[counter] = d.get(counter, []) + lines
+                    lines = color + line[:-1] + '\033[0m'
+                else:
+                    lines = line[:-1]
+                d[counter] = d.get(counter, '') + lines
         counter = opt
     
     file.close()
@@ -31,20 +31,23 @@ def read_file(str1, file, color, color_letter):
     
 
 #output flag check
-output_file = output_flag_check(sys.argv)
+output_file_name = output_flag_check(sys.argv)
+output_file = open(output_file_name, 'w')
 
 #open file
-str1, file = open_file(sys.argv)
+str1, banner_name = open_file(sys.argv)
+file = open(banner_name, 'r')
 
 #check --color flag and get corresponding color and letters
 color, color_letter = color_flag(sys.argv)
 
 output = read_file(str1, file, color, color_letter)
 
-if output_file == False:
+if output_file_name == False:
     for i, j in output.items():
-        print(justify(sys.argv, ''.join(j)))
+        print(justify(sys.argv, j))
 else:
     for i, j in output.items():
-        output_file.write(''.join(j) + '\n')
+        output_file.write(justify(sys.argv, j) + '\n')
     output_file.close()
+

@@ -3,16 +3,16 @@ import shutil
 def open_file(input_arg):
     if input_arg[-1] == 'standard' or input_arg[-1] == 'shadow' or input_arg[-1] == 'thinkertoy':
         str1 = input_arg[-2]
-        file = open(input_arg[-1]+'.txt', 'r')
+        file = input_arg[-1]+'.txt'
     else:
         str1 = input_arg[-1]
-        file = open('standard.txt', 'r')
+        file = 'standard.txt'
     return (str1, file)
 
 def output_flag_check(input_arg):
     for arg in input_arg:
         if '--output=' in arg:
-            return open(arg.split('=')[1], 'w')
+            return arg.split('=')[1]
     return False
 
 def color_flag(input_arg):
@@ -35,13 +35,17 @@ def color_flag(input_arg):
 def justify(input_arg, str1):
     terminal_size = shutil.get_terminal_size().columns
     align = None
+    count = 0
     for arg in input_arg:
         if '--align=' in arg:
             align = arg.split('=')[1]
+    for i in list(str1):
+        if i == 'm':
+            count += 4
     if align == 'center':
-        return str1.center(terminal_size)
+        return str1.center(terminal_size + count)
     if align == 'right':
-        return str1.rjust(terminal_size)
+        return str1.rjust(terminal_size + count)
     if align == 'left':
-        return str1.ljust(terminal_size)
+        return str1.ljust(terminal_size + count)
     return str1
